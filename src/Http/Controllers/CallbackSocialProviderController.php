@@ -19,16 +19,19 @@ class CallbackSocialProviderController extends Controller
 
         $account = $provider->getAccount();
 
+        $user = auth()->user();
         Account::updateOrCreate(
             [
                 'provider' => $providerName,
-                'provider_id' => $account['id']
+                'provider_id' => $account['id'],
+                'user_id' => $user->id
             ],
             [
                 'name' => $account['name'],
                 'username' => $account['username'],
                 'image' => $account['image'],
                 'credentials' => $credentials,
+                'user_id' => $user->id
             ]
         );
 
