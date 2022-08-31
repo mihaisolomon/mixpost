@@ -14,8 +14,12 @@ class AccountsController extends Controller
 {
     public function index(): Response
     {
+        $user = auth()->user();
+
+        $accounts = Account::where('user_id', $user->id)->get();
+
         return Inertia::render('Accounts', [
-            'accounts' => AccountResource::collection(Account::oldest()->get())->resolve()
+            'accounts' => AccountResource::collection($accounts)->resolve()
         ]);
     }
 
