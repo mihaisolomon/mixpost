@@ -1,4 +1,5 @@
 <script setup>
+import {Link} from '@inertiajs/inertia-vue3';
 import Logo from "@/Components/DataDisplay/Logo.vue"
 import MenuItem from "@/Components/Sidebar/MenuItem.vue"
 import MenuDelimiter from "@/Components/Sidebar/MenuDelimiter.vue"
@@ -11,21 +12,20 @@ import CalendarIcon from "@/Icons/Calendar.vue"
 import PhotoIcon from "@/Icons/Photo.vue"
 import PackageIcon from "@/Icons/Package.vue"
 import CogIcon from "@/Icons/Cog.vue"
-import {Link} from '@inertiajs/inertia-vue3';
 </script>
 <template>
-    <div class="w-full h-full flex flex-col py-10 bg-white border-r border-gray-200">
-        <div class="relative mb-12 px-8">
+    <div class="w-full h-full flex flex-col py-2xl bg-white border-r border-gray-200">
+        <div class="relative mb-12 px-xl">
             <Link :href="route('mixpost.dashboard')">
                 <Logo class="h-12"/>
             </Link>
         </div>
 
-        <div class="flex px-8">
-            <DarkButtonLink :href="route('mixpost.posts.create')" class="w-full"><PlusIcon class="mr-2"/> Create post</DarkButtonLink>
+        <div class="flex px-xl">
+            <DarkButtonLink :href="route('mixpost.posts.create')" class="w-full"><PlusIcon class="mr-xs"/> Create post</DarkButtonLink>
         </div>
 
-        <div class="flex flex-col space-y-6 overflow-y-auto px-8 mt-10">
+        <div class="flex flex-col space-y-6 overflow-y-auto px-xl mt-2xl">
             <MenuGroupBody>
                 <MenuItem :url="route('mixpost.dashboard')" :active="$page.component === 'Dashboard'">
                     <template #icon>
@@ -39,7 +39,7 @@ import {Link} from '@inertiajs/inertia-vue3';
                 </MenuItem>
             </MenuGroupBody>
             <MenuDelimiter/>
-            <MenuGroupHeader :create-url="route('mixpost.posts.create')" class="mt-6">
+            <MenuGroupHeader :create-url="route('mixpost.posts.create')" class="mt-lg">
                 Content
                 <template #icon>
                     <PlusIcon/>
@@ -47,19 +47,19 @@ import {Link} from '@inertiajs/inertia-vue3';
             </MenuGroupHeader>
             <MenuGroupBody>
                 <MenuItem :url="route('mixpost.posts.index')"
-                          :active="route().current('mixpost.posts.index')">
+                          :active="$page.component === 'Posts/Index'">
                     <template #icon>
                         <GridIcon/>
                     </template>
                     Posts
                 </MenuItem>
-                <MenuItem :url="route('mixpost.schedule')" :active="route().current('mixpost.schedule')">
+                <MenuItem :url="route('mixpost.schedule')" :active="$page.component === 'Schedule'">
                     <template #icon>
                         <CalendarIcon/>
                     </template>
                     Schedule
                 </MenuItem>
-                <MenuItem :url="route('mixpost.media.index')" :active="route().current('mixpost.media.index')">
+                <MenuItem :url="route('mixpost.media.index')" :active="$page.component === 'Media'">
                     <template #icon>
                         <PhotoIcon/>
                     </template>
@@ -71,13 +71,13 @@ import {Link} from '@inertiajs/inertia-vue3';
                 Configuration
             </MenuGroupHeader>
             <MenuGroupBody>
-                <MenuItem :url="route('mixpost.accounts.index')" :active="route().current('mixpost.accounts.index')">
+                <MenuItem :url="route('mixpost.accounts.index')" :active="$page.component === 'Accounts'">
                     <template #icon>
                         <PackageIcon/>
                     </template>
                     Accounts
                 </MenuItem>
-                <MenuItem :url="route('mixpost.settings')" :active="route().current('mixpost.settings')">
+                <MenuItem :url="route('mixpost.settings.index')" :active="$page.component === 'Settings'">
                     <template #icon>
                         <CogIcon/>
                     </template>

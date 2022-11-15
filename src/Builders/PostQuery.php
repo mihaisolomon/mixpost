@@ -9,7 +9,7 @@ use Inovector\Mixpost\Builders\Filters\PostKeyword;
 use Inovector\Mixpost\Builders\Filters\PostTags;
 use Inovector\Mixpost\Builders\Filters\PostStatus;
 use Inovector\Mixpost\Contracts\Query;
-use Inovector\Mixpost\Model\Post;
+use Inovector\Mixpost\Models\Post;
 
 class PostQuery implements Query
 {
@@ -25,11 +25,11 @@ class PostQuery implements Query
             $query = PostKeyword::apply($query, $request->get('keyword'));
         }
 
-        if ($request->has('accounts' && !empty($request->get('accounts')))) {
+        if ($request->has('accounts') && !empty($request->get('accounts'))) {
             $query = PostAccounts::apply($query, $request->get('accounts', []));
         }
 
-        if ($request->has('tags' && !empty($request->get('tags')))) {
+        if ($request->has('tags') && !empty($request->get('tags'))) {
             $query = PostTags::apply($query, $request->get('tags', []));
         }
 

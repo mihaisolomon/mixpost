@@ -1,77 +1,125 @@
 {
-  "resources/img/fb-wow.svg": {
-    "file": "assets/fb-wow.ca50712c.svg",
-    "src": "resources/img/fb-wow.svg"
-  },
   "resources/img/fb-like.svg": {
     "file": "assets/fb-like.59c2ede2.svg",
     "src": "resources/img/fb-like.svg"
+  },
+  "resources/img/fb-wow.svg": {
+    "file": "assets/fb-wow.ca50712c.svg",
+    "src": "resources/img/fb-wow.svg"
   },
   "resources/img/fb-icons.png": {
     "file": "assets/fb-icons.855a0fcf.png",
     "src": "resources/img/fb-icons.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app.60d19623.js",
+    "file": "assets/app.7aef0877.js",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
       "resources/js/Pages/Accounts.vue",
       "resources/js/Pages/Dashboard.vue",
       "resources/js/Pages/Media.vue",
-      "resources/js/Pages/Posts/Create.vue",
+      "resources/js/Pages/Posts/CreateEdit.vue",
       "resources/js/Pages/Posts/Index.vue",
       "resources/js/Pages/Schedule.vue",
       "resources/js/Pages/Settings.vue"
     ],
     "css": [
-      "assets/app.817af50d.css"
+      "assets/app.59c8f6ed.css"
     ]
   },
   "resources/js/Pages/Accounts.vue": {
-    "file": "assets/Accounts.a8fce3e3.js",
+    "file": "assets/Accounts.59a64670.js",
     "src": "resources/js/Pages/Accounts.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_DropdownItem.eb4f6081.js"
+      "_PageHeader.14c22539.js",
+      "_CircleLoading.4757f298.js",
+      "_Trash.21d2eb1b.js",
+      "_EllipsisVertical.7fa2a2f1.js"
     ]
   },
-  "_DropdownItem.eb4f6081.js": {
-    "file": "assets/DropdownItem.eb4f6081.js",
+  "_PageHeader.14c22539.js": {
+    "file": "assets/PageHeader.14c22539.js",
     "imports": [
       "resources/js/app.js"
+    ]
+  },
+  "_CircleLoading.4757f298.js": {
+    "file": "assets/CircleLoading.4757f298.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_Trash.21d2eb1b.js": {
+    "file": "assets/Trash.21d2eb1b.js",
+    "imports": [
+      "resources/js/app.js",
+      "_CircleLoading.4757f298.js"
     ],
     "css": [
-      "assets/DropdownItem.b54678c7.css"
+      "assets/Trash.b54678c7.css"
+    ]
+  },
+  "_EllipsisVertical.7fa2a2f1.js": {
+    "file": "assets/EllipsisVertical.7fa2a2f1.js",
+    "imports": [
+      "resources/js/app.js"
     ]
   },
   "resources/js/Pages/Dashboard.vue": {
-    "file": "assets/Dashboard.938140df.js",
+    "file": "assets/Dashboard.53002966.js",
     "src": "resources/js/Pages/Dashboard.vue",
     "isDynamicEntry": true,
     "imports": [
-      "resources/js/app.js"
+      "resources/js/app.js",
+      "_PrimaryButton.7538202e.js",
+      "_CircleLoading.4757f298.js"
+    ]
+  },
+  "_PrimaryButton.7538202e.js": {
+    "file": "assets/PrimaryButton.7538202e.js",
+    "imports": [
+      "resources/js/app.js",
+      "_CircleLoading.4757f298.js"
     ]
   },
   "resources/js/Pages/Media.vue": {
-    "file": "assets/Media.878b9497.js",
+    "file": "assets/Media.f083585e.js",
     "src": "resources/js/Pages/Media.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "resources/js/Pages/Posts/Create.vue": {
-    "file": "assets/Create.6adaf816.js",
-    "src": "resources/js/Pages/Posts/Create.vue",
+  "resources/js/Pages/Posts/CreateEdit.vue": {
+    "file": "assets/CreateEdit.2bad5a65.js",
+    "src": "resources/js/Pages/Posts/CreateEdit.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_DropdownItem.eb4f6081.js"
+      "_PostStatus.302140dd.js",
+      "_PageHeader.14c22539.js",
+      "_Trash.21d2eb1b.js",
+      "_CircleLoading.4757f298.js",
+      "_PrimaryButton.7538202e.js"
     ],
     "css": [
-      "assets/Create.1d03895f.css"
+      "assets/CreateEdit.8483be18.css"
+    ]
+  },
+  "_PostStatus.302140dd.js": {
+    "file": "assets/PostStatus.302140dd.js",
+    "imports": [
+      "resources/js/app.js",
+      "_Trash.21d2eb1b.js",
+      "_PageHeader.14c22539.js",
+      "_PrimaryButton.7538202e.js",
+      "_CircleLoading.4757f298.js"
+    ],
+    "css": [
+      "assets/PostStatus.eda7d8b2.css"
     ],
     "assets": [
       "assets/fb-like.59c2ede2.svg",
@@ -80,15 +128,21 @@
     ]
   },
   "resources/js/Pages/Posts/Index.vue": {
-    "file": "assets/Index.1baa19b7.js",
+    "file": "assets/Index.991de03f.js",
     "src": "resources/js/Pages/Posts/Index.vue",
     "isDynamicEntry": true,
     "imports": [
-      "resources/js/app.js"
+      "resources/js/app.js",
+      "_PageHeader.14c22539.js",
+      "_PostStatus.302140dd.js",
+      "_PrimaryButton.7538202e.js",
+      "_Trash.21d2eb1b.js",
+      "_CircleLoading.4757f298.js",
+      "_EllipsisVertical.7fa2a2f1.js"
     ]
   },
   "resources/js/Pages/Schedule.vue": {
-    "file": "assets/Schedule.b302dcc8.js",
+    "file": "assets/Schedule.b4cb1ee7.js",
     "src": "resources/js/Pages/Schedule.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -96,23 +150,30 @@
     ]
   },
   "resources/js/Pages/Settings.vue": {
-    "file": "assets/Settings.d05eae7d.js",
+    "file": "assets/Settings.b492bbfd.js",
     "src": "resources/js/Pages/Settings.vue",
     "isDynamicEntry": true,
     "imports": [
-      "resources/js/app.js"
+      "resources/js/app.js",
+      "_PageHeader.14c22539.js",
+      "_CircleLoading.4757f298.js",
+      "_PrimaryButton.7538202e.js"
     ]
   },
-  "DropdownItem.css": {
-    "file": "assets/DropdownItem.b54678c7.css",
-    "src": "DropdownItem.css"
+  "PostStatus.css": {
+    "file": "assets/PostStatus.eda7d8b2.css",
+    "src": "PostStatus.css"
   },
-  "resources/js/Pages/Posts/Create.css": {
-    "file": "assets/Create.1d03895f.css",
-    "src": "resources/js/Pages/Posts/Create.css"
+  "Trash.css": {
+    "file": "assets/Trash.b54678c7.css",
+    "src": "Trash.css"
+  },
+  "resources/js/Pages/Posts/CreateEdit.css": {
+    "file": "assets/CreateEdit.8483be18.css",
+    "src": "resources/js/Pages/Posts/CreateEdit.css"
   },
   "resources/js/app.css": {
-    "file": "assets/app.817af50d.css",
+    "file": "assets/app.59c8f6ed.css",
     "src": "resources/js/app.css"
   }
 }

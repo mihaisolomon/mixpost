@@ -1,6 +1,7 @@
 <script setup>
 import {computed, inject, onMounted, ref, watch} from "vue";
 import {capitalize, clone, cloneDeep} from "lodash";
+import usePost from "@/Composables/usePost";
 import usePostVersions from "@/Composables/usePostVersions";
 import useEditor from "@/Composables/useEditor";
 import Editor from "@/Components/Package/Editor.vue";
@@ -26,10 +27,16 @@ const props = defineProps({
     },
 });
 
+const {isInHistory} = usePost();
+
 /**
  * Account
  */
 const selectAccount = (account) => {
+    if (isInHistory.value) {
+        return;
+    }
+
     if (props.form.accounts.includes(account)) {
         props.form.accounts = props.form.accounts.filter(item => item !== account);
         return;
@@ -147,7 +154,7 @@ watch(() => props.form.accounts, () => {
 const {insertEmoji, focusEditor} = useEditor();
 </script>
 <template>
-    <div class="flex items-center space-x-3 mb-6">
+    <div class="flex flex-wrap items-center gap-sm mb-lg">
         <template v-for="account in $page.props.accounts" :key="account.id">
             <button @click="selectAccount(account.id)"
                     :disabled="isAccountUnselectable(account)">
@@ -171,16 +178,17 @@ const {insertEmoji, focusEditor} = useEditor();
                          :active-version="activeVersion"
                          :accounts="$page.props.accounts"
                          :selected-accounts="form.accounts"
-                         class="mb-3"/>
+                         class="mb-sm"/>
 
         <template v-for="(item, index) in content" :key="index">
             <Editor id="postEditor"
                     :value="item.body"
+                    :editable="!isInHistory"
                     @update="updateContent(index, 'body', $event)"
                     placeholder="Type here something interesting for your audience...">
                 <template #default="props">
                     <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-xs">
                             <EmojiPicker
                                 @selected="insertEmoji({editorId: 'postEditor', emoji: $event})"
                                 @close="focusEditor({editorId: 'postEditor'})"

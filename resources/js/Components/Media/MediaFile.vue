@@ -28,6 +28,7 @@ const isVideo = (mime_type) => {
 </script>
 <template>
     <figure class="relative">
+        <slot/>
         <div
             class="relative flex rounded"
             :class="{'border border-red-500 p-5': media.hasOwnProperty('error')}"
@@ -38,7 +39,7 @@ const isVideo = (mime_type) => {
 
             <div v-if="media.hasOwnProperty('error')" class="text-center">
                 <ExclamationCircleIcon class="w-8 h-8 mx-auto text-red-500"/>
-                <div class="mt-2 text-red-500">{{ media.error ? media.error : 'Error uploading file!' }}</div>
+                <div class="mt-xs text-red-500">{{ media.error ? media.error : 'Error uploading file!' }}</div>
             </div>
 
             <img

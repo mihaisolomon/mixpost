@@ -1,6 +1,9 @@
 <?php
 
 return [
+    /*
+     * Credentials for third-party services
+     */
     'credentials' => [
         'twitter' => [
             'client_id' => env('MIXPOST_TWITTER_CLIENT_ID'),
@@ -9,6 +12,11 @@ return [
         ],
     ],
 
+    /*
+     * Setting options for each social network
+     * We recommend leaving these options unchanged
+     * You only change them when the API policy of the social networks changes, and you know what you are doing.
+     */
     'social_provider_options' => [
         'twitter' => [
             'simultaneous_posting_on_multiple_accounts' => false,
@@ -20,6 +28,9 @@ return [
         ]
     ],
 
+    /**
+     * Mixpost will redirect unauthorized users to the route specified here
+     */
     'redirect_unauthorized_users_to_route' => 'login',
 
     /*
@@ -49,9 +60,9 @@ return [
     ],
 
     /*
-      * The path where to store temporary files while performing image conversions.
-      * If set to null, storage_path('mixpost-media/temp') will be used.
-      */
+     * The path where to store temporary files while performing image conversions.
+     * If set to null, storage_path('mixpost-media/temp') will be used.
+     */
     'temporary_directory_path' => null,
 
     /*
@@ -59,4 +70,9 @@ return [
      */
     'ffmpeg_path' => env('FFMPEG_PATH', '/usr/bin/ffmpeg'),
     'ffprobe_path' => env('FFPROBE_PATH', '/usr/bin/ffprobe'),
+
+    /**
+     * Define cache prefix
+     */
+    'cache_prefix' => env('MIXPOST_CACHE_PREFIX', 'mixpost')
 ];

@@ -1,6 +1,8 @@
 <script setup>
 import {ref, onMounted, watch} from "vue";
-import {format, isPast, addHours, parseISO} from "date-fns"
+import {format, addHours, parseISO} from "date-fns"
+import useSettings from "@/Composables/useSettings";
+import {changeTimeZone, isTimePast, convertTime12to24} from "@/helpers";
 import DialogModal from "@/Components/Modal/DialogModal.vue"
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue"
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue"
@@ -31,21 +33,33 @@ const hasErrors = ref(false);
 
 const timePicker = ref();
 
+const {timeZone, timeFormat, weekStartsOn} = useSettings();
+
 const setDateTime = () => {
     if (props.show) {
-        date.value = props.date ? props.date : format(new Date(), 'Y-MM-dd');
+        if (!props.date && !props.time) {
+            // Display the next time if the date and time are null
+            const currentTime = changeTimeZone(new Date(), timeZone);
 
-        const nextHour = format(addHours(new Date(), 1), 'H');
-        time.value = props.time ? props.time : (nextHour + ':00');
+            const [nextDate, nextHour] = format(addHours(currentTime, 1), 'Y-MM-dd H').split(' ');
+
+            date.value = nextDate
+            time.value = `${nextHour}:00`
+
+            return;
+        }
+
+        date.value = props.date;
+        time.value = props.time;
     }
 }
 
 const validate = () => {
     return new Promise(resolve => {
         // Prevent time value in the past
-        const selected = new Date(parseISO(date.value + ' ' + time.value));
+        const selected = new Date(parseISO(`${date.value} ${time.value}`));
 
-        if (isPast(selected)) {
+        if (isTimePast(selected, timeZone)) {
             hasErrors.value = true;
 
             resolve(false);
@@ -76,7 +90,15 @@ const confirm = async () => {
     const hour = timePicker.value.querySelector('.flatpickr-hour').value;
     const minutes = timePicker.value.querySelector('.flatpickr-minute').value;
 
-    time.value = hour + ':' + minutes; // we make sure we have the data that was entered manually (on keyup)
+    if (timeFormat === 24) {
+        time.value = `${hour}:${minutes}`; // we make sure we have the data that was entered manually (on keyup)
+    }
+
+    if (timeFormat === 12) {
+        const ampm = timePicker.value.querySelector('.flatpickr-am-pm').innerText;
+
+        time.value = convertTime12to24(`${hour}:${minutes} ${ampm}`); // we make sur sure we have the data that was entered manually (on keyup)
+    }
 
     const isValid = await validate();
 
@@ -106,6 +128,9 @@ const configDatePicker = {
     monthSelectorType: 'static',
     yearSelectorType: 'static',
     static: true,
+    locale: {
+        firstDayOfWeek: weekStartsOn
+    },
     prevArrow: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>',
     nextArrow: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>'
 }
@@ -115,20 +140,20 @@ const configTimePicker = {
     timeFormat: 'H:i',
     noCalendar: true,
     enableTime: true,
-    time_24hr: true
+    time_24hr: timeFormat === 24
 }
 </script>
 <template>
     <DialogModal :show="show"
-                        max-width="sm"
-                        :closeable="true"
-                        @close="close">
+                 max-width="sm"
+                 :closeable="true"
+                 @close="close">
         <template #body>
             <div v-if="show" class="pickTime flex flex-col">
                 <FlatPickr v-model="date" :config="configDatePicker"/>
 
-                <div class="flex items-center justify-center mx-auto mt-6">
-                    <div class="mr-2 text-gray-400">Time</div>
+                <div class="flex items-center justify-center mx-auto mt-lg">
+                    <div class="mr-xs text-gray-400">Time</div>
                     <div class="w-auto" ref="timePicker">
                         <FlatPickr v-model="time" :config="configTimePicker"/>
                     </div>
@@ -139,7 +164,7 @@ const configTimePicker = {
         </template>
 
         <template #footer>
-            <SecondaryButton @click="close" class="mr-2">Cancel</SecondaryButton>
+            <SecondaryButton @click="close" class="mr-xs">Cancel</SecondaryButton>
             <PrimaryButton @click="confirm" :disabled="hasErrors">Pick time</PrimaryButton>
         </template>
     </DialogModal>

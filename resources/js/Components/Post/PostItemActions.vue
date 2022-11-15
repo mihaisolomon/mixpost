@@ -1,6 +1,8 @@
 <script setup>
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import {usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
+import emitter from "@/Services/emitter";
 import useNotifications from "@/Composables/useNotifications";
 import ConfirmationModal from "@/Components/Modal/ConfirmationModal.vue";
 import PureButtonLink from "@/Components/Button/PureButtonLink.vue";
@@ -24,23 +26,35 @@ const props = defineProps({
 const emit = defineEmits(['onDelete'])
 
 const confirmationDeletion = ref(false);
-const preview = ref(false);
+
+const filterStatus = computed(() => {
+    return usePage().props.value.filter.status;
+});
 
 const {notify} = useNotifications();
 
 const deletePost = () => {
-    Inertia.delete(route('mixpost.posts.delete', {post: props.itemId}), {
+    Inertia.delete(route('mixpost.posts.delete', {post: props.itemId, status: filterStatus.value}), {
         onSuccess() {
             confirmationDeletion.value = false;
             notify('success', 'Post deleted')
             emit('onDelete')
+            emitter.emit('postDelete', props.itemId);
+        }
+    })
+}
+
+const duplicate = () => {
+    Inertia.post(route('mixpost.posts.duplicate', {post: props.itemId}), {}, {
+        onSuccess() {
+            notify('success', 'Post duplicated')
         }
     })
 }
 </script>
 <template>
     <div>
-        <div class="flex flex-row items-center gap-2">
+        <div class="flex flex-row items-center gap-xs">
             <PureButtonLink :href="route('mixpost.posts.edit', {post: itemId})" v-tooltip="'Edit'">
                 <PencilSquareIcon/>
             </PureButtonLink>
@@ -53,7 +67,7 @@ const deletePost = () => {
                 </template>
 
                 <template #content>
-                    <DropdownItem>
+                    <DropdownItem @click="duplicate" as="button">
                         <DuplicateIcon class="!w-5 !h-5 mr-1"/>
                         Duplicate
                     </DropdownItem>
@@ -74,7 +88,7 @@ const deletePost = () => {
                 Are you sure you want to delete this post?
             </template>
             <template #footer>
-                <SecondaryButton @click="confirmationDeletion = false" class="mr-2">Cancel</SecondaryButton>
+                <SecondaryButton @click="confirmationDeletion = false" class="mr-xs">Cancel</SecondaryButton>
                 <DangerButton @click="deletePost">Delete</DangerButton>
             </template>
         </ConfirmationModal>
