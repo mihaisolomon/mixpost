@@ -18,14 +18,21 @@ class AccountsController extends Controller
 
         $accounts = Account::where('user_id', $user->id)->get();
 
-        return Inertia::render('Accounts', [
+        return Inertia::render('Accounts/Accounts', [
             'accounts' => AccountResource::collection($accounts)->resolve()
         ]);
     }
 
     public function update(Account $account): RedirectResponse
     {
-        $result = SocialProviderManager::connect($account->provider)->credentials($account->credentials)->getAccount();
+        $provider = SocialProviderManager::connect($account->provider);
+        $provider->setAccessToken($account->access_token);
+
+        $result = $provider->getAccount($account->toArray());
+
+        if (empty($result)) {
+            return redirect()->back()->with('The account cannot be updated. Re-authenticate your account.');
+        }
 
         $account->update([
             'name' => $result['name'],

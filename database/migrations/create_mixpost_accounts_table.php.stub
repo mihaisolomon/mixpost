@@ -20,11 +20,12 @@ return new class extends Migration
                 ->on('users')
                 ->onDelete('cascade');
             $table->string('name');
-            $table->string('username');
-            $table->string('image')->nullable();
+            $table->string('username')->nullable();
+            $table->string('image', 455)->nullable();
             $table->string('provider');
             $table->string('provider_id');
-            $table->json('credentials');
+            $table->json('data')->nullable();
+            $table->json('access_token');
             $table->timestamps();
         });
     }

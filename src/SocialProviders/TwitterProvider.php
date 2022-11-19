@@ -5,42 +5,22 @@ namespace Inovector\Mixpost\SocialProviders;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Inovector\Mixpost\Contracts\SocialProvider;
+use Inovector\Mixpost\Abstracts\SocialProvider;
 
-class TwitterProvider implements SocialProvider
+class TwitterProvider extends SocialProvider
 {
     const DEFAULT_API_VERSION = '2';
     const STANDARD_API_VERSION = '1.1';
 
     public TwitterOAuth $connection;
-    protected Request $request;
-    protected string $redirectUrl;
 
+    // Overwrite __construct to use Twitter SDK
     public function __construct(Request $request, $clientId, $clientSecret, $redirectUrl)
     {
-        $connection = new TwitterOAuth($clientId, $clientSecret);
-        $connection->setApiVersion(self::DEFAULT_API_VERSION);
+        $this->connection = new TwitterOAuth($clientId, $clientSecret);
+        $this->connection->setApiVersion(self::DEFAULT_API_VERSION);
 
-        $this->request = $request;
-        $this->redirectUrl = $redirectUrl;
-        $this->connection = $connection;
-    }
-
-    public function credentials(array $accountCredentials = []): static
-    {
-        $this->connection->setOauthToken($accountCredentials['oauth_token'], $accountCredentials['oauth_token_secret']);
-
-        return $this;
-    }
-
-    public function setApiVersion(string $apiVersion = '2'): void
-    {
-        $this->connection->setApiVersion($apiVersion);
-    }
-
-    public function setCredentials(array $accountCredentials = []): void
-    {
-        $this->connection->setOauthToken($accountCredentials['oauth_token'], $accountCredentials['oauth_token_secret']);
+        parent::__construct($request, $clientId, $clientSecret, $redirectUrl);
     }
 
     public function getAuthUrl(): string
@@ -50,7 +30,7 @@ class TwitterProvider implements SocialProvider
         return $this->connection->url('oauth/authorize', ['oauth_token' => $response['oauth_token'], 'oauth_token_secret' => $response['oauth_token_secret']]);
     }
 
-    public function getAccessToken(): array
+    public function requestAccessToken(array $params = []): array
     {
         $response = $this->connection->oauth('oauth/access_token', ['oauth_token' => $this->request->get('oauth_token'), 'oauth_verifier' => $this->request->get('oauth_verifier')]);
 
@@ -60,7 +40,21 @@ class TwitterProvider implements SocialProvider
         ];
     }
 
-    public function getAccount(): array
+    // Overwrite setAccessToken to use Twitter SDK
+    public function setAccessToken(array $token = []): void
+    {
+        $this->connection->setOauthToken($token['oauth_token'], $token['oauth_token_secret']);
+    }
+
+    // Overwrite useAccessToken to use Twitter SDK
+    public function useAccessToken(array $token = []): static
+    {
+        $this->connection->setOauthToken($token['oauth_token'], $token['oauth_token_secret']);
+
+        return $this;
+    }
+
+    public function getAccount(array $params = []): array
     {
         $response = $this->connection->get('users/me', ['user.fields' => 'profile_image_url,created_at']);
 
@@ -72,7 +66,7 @@ class TwitterProvider implements SocialProvider
         ];
     }
 
-    public function publishPost($text, $media = [])
+    public function publishPost(string $text, array $media = [], array $params = []): array
     {
         // Upload media
         $this->connection->setApiVersion(self::STANDARD_API_VERSION);
@@ -85,14 +79,14 @@ class TwitterProvider implements SocialProvider
                 'media' => $item['path'],
             ];
 
-            $uploadResponse = $this->connection->upload('media/upload', $parameters);
+            $uploadResult = $this->connection->upload('media/upload', $parameters);
 
-            if (!$uploadResponse) {
-                $uploadMediaErrors[$item['id']] = $uploadResponse;
+            if (!$uploadResult) {
+                $uploadMediaErrors[$item['id']] = $uploadResult;
                 continue;
             }
 
-            $uploadedMediaIds[] = $uploadResponse->media_id_string;
+            $uploadedMediaIds[] = $uploadResult->media_id_string;
         }
 
         // Publish post with media
@@ -106,18 +100,24 @@ class TwitterProvider implements SocialProvider
             ];
         }
 
-        $postResponse = $this->connection->post('tweets', $postParameters, true);
+        $postResult = $this->connection->post('tweets', $postParameters, true);
 
-        $errors = Arr::map($postResponse->errors ?? [], function ($error) {
+        $errors = Arr::map($postResult->errors ?? [], function ($error) {
             return $error->message;
         });
 
-        if (isset($postResponse->status) && $postResponse->status === 403) {
-            $errors[] = $postResponse->detail;
+        if (isset($postResult->status) && $postResult->status === 403) {
+            $errors[] = $postResult->detail;
+        }
+
+        if (!empty($errors)) {
+            return [
+                'errors' => $errors
+            ];
         }
 
         return [
-            'errors' => $errors,
+            'id' => $postResult->data->id,
             'upload_media_error' => $uploadMediaErrors,
         ];
     }

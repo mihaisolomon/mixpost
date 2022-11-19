@@ -15,10 +15,13 @@ class Account extends Model
         'provider',
         'provider_id',
         'credentials',
-        'user_id'
+        'user_id',
+        'data',
+        'access_token'
     ];
 
     protected $casts = [
-        'credentials' => 'array'
+        'data' => 'array',
+        'access_token' => 'array',
     ];
 }
